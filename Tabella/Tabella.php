@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <?php
+        <style>
+            body{
+                text-align: center;
+            }
+        </style>
+        <h1>Tabella</h1>
+        <?php   // per migliorare l'efficienza è bene far interpretare il codice dal browser piuttosto che php
             $x = 1;
             $Materie = array(
                 array("Lezione(7.50-8.40)", "Inglese", "Italiano", "Inglese", "Inglese", "Italiano", "Tpsit"),
@@ -16,10 +22,10 @@
             function rappresentaTabella($Giorni, $Materie) {
                 global $x;
                 echo "<table border=$x cellspacing=$x cellpadding=$x align=center>
-                   <thead>
-                    <tr>";
-                foreach ($Giorni as $y) {
-                    echo "<th>$y</th>"; 
+                       <thead>
+                        <tr>";
+                foreach ($Giorni as $y) {            
+                    echo "<th>$y</th>";
                 }
                 echo "</tr></thead><tbody>";
                 for ($i = 0; $i < count($Materie); $i++) {
@@ -29,7 +35,7 @@
                     }
                     echo "</tr>";
                 }
-                echo "</tbody></table>";
+                echo "</tbody></table>";     
             }
 
             rappresentaTabella($Giorni, $Materie);
