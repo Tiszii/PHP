@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+            <!--
+            http://www.example.com/test_form.php/%22%3E%3Cscript%3Ealert('hacked')%3C/script%3E -> action="test_form.php/"><script>alert('hacked')</script>
+            
+            "http://www.example.com/test_form.php" -> action="test_form.php"
+            
+            Per evitare Tutto cio 
+            action="<?php 
+                        echo htmlspecialchars($_SERVER["PHP_SELF"]);
+                    ?>"
+            -->
+            Name: <input type="text" name="name"><br>
+            E-mail: <input type="text" name="email"><br>
+            <input type="submit">
+        </form>
+
+    </body>
+</html>
+
+

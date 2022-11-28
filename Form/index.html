@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="img/coding.png" type="image/x-icon">
+        <title>Registration</title>
+        <!-- Bulma Version 0.9.0-->
+        <link rel="stylesheet" href="../bulma/css/bulma.min.css" />
+        <link rel="stylesheet" href="../bulma/css/modal-fx.min.css" />
+    </head>
+    <body>
+
+        <section class="hero is-info is-small">
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <br>
+                    <p class="title is-1">
+                        Pagina per la registrazione
+                    </p>
+                    <p class="subtitle">
+                        Realizzato da Dalri Tiziano
+                    </p>
+                    <br>
+                </div>
+            </div>
+        </section>
+        <div class="box cta">
+            <nav class="level">
+                <div class="level-left">
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p id="errore"></p>
+                    </div>
+                </div>
+                <div class="level-right has-text-centered">
+                    <div>
+                        <div class="buttons">
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <br>
+        <section class="container">
+            <p class="level-item" style="font-size:40px">Registrati</p>
+            <br>
+            <br>
+            <div class="level-item">
+                <form action="validate.php" method="post" name="formRegistrazione" id="formRegistrazione">
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-medium" type="text" placeholder="Nome" name="nome" id="fnome" pattern="[A-Za-z]{4,15}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-medium" type="text" placeholder="Cognome" name="cognome" id="fcognome" pattern="[A-Za-z]{4,15}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field">
+                        <div class="control">
+                            <!--<input class="input is-medium" type="email" placeholder="Email" name="email" id="femail" pattern="[a-z]*\.[a-z][a-z0-9]*@buonarroti.tn.it">-->
+                            <input class="input is-medium" type="text" placeholder="Email" id="email" name="email" pattern="[a-z]*\.[a-z][a-z0-9]*" required="">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-medium" type="password" placeholder="Password" name="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-medium" type="password" placeholder="Conferma password" name="ConfirmPassword" id="Cpassword">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="level-item">
+                        <input class="button is-info" type="submit" value="Invia" name="btnA">
+                    </div>
+                </form>
+        </section>
+    </body>
+</html>
