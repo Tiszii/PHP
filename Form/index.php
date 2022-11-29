@@ -14,64 +14,66 @@
         <?php
         //define variables and set to empty values
         $nomeErr = $emailErr = $passwordErr = $cognomeErr = "";
-        $nome = $email = $password = $cognome = "";
+        $nome = $email = $password = $cognome = $ConfirmPassword = "";
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             //validazione nome
             if (empty($_POST["nome"])) {
-                $nomeErr = "Il nome è richiesto";
+                $nomeErr = "Il nome è richiesto<br>";
             } else {
                 $nome = test_input($_POST["nome"]);
                 // controllo se il nome contiene solo lettere e spazi bianchi
-                if (!preg_match("/^[a-zA-Z-' ]*$/", $nome)) {
-                    $nomeErr = "Solo lettere e spazi bianchi sono ammessi";
+                $nome_regrex = "/^[a-zA-Z-' ]*$/";
+                if (!preg_match($nome_regrex, $nome)) {
+                    $nomeErr = "Solo lettere e spazi bianchi sono ammessi <br>";
+                    $nome = "";
                 }
             }
 
             //Validazione cognome
             if (empty($_POST["cognome"])) {
-                $cognomeErr = "Il cognome è richiesto";
+                $cognomeErr = "Il cognome è richiesto<br>";
             } else {
                 $cognome = test_input($_POST["cognome"]);
                 // controllo se il nome contiene solo lettere e spazi bianchi
-                if (!preg_match("/^[a-zA-Z-' ]*$/", $cognome)) {
-                    $cognomeErr = "Solo lettere e spazi bianchi sono ammessi";
+                $cognome_regrex = "/^[a-zA-Z-' ]*$/";
+                if (!preg_match($cognome_regrex, $cognome)) {
+                    $cognomeErr = "Solo lettere e spazi bianchi sono ammessi <br>";
+                    $cognome = "";
                 }
             }
 
             //Validazione email
             if (empty($_POST["email"])) {
-                $emailErr = "L'email è richiesta";
+                $emailErr = "L'email è richiesta<br>";
             } else {
                 $email = test_input($_POST["email"]);
                 //controllo se l'email è corretta
-                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $emailErr = "Email fornita non valida";
+                $email_validation_regex = '/^\\S+@\\S+\\.\\S+$/';
+                if (!preg_match($email_validation_regex, $email)) {
+                    $emailErr = "Email fornita non valida <br>";
+                    $email = "";
                 }
             }
 
             //Validazione password
-            if (empty($_POST["password"])) {
-                $passwordErr = "La password è richiesta";
+            if (empty($_POST["password"]) && empty($_POST["ConfirmPassword"])) {
+                $passwordErr = "La password è richiesta<br>";
             } else {
                 $password = test_input($_POST["password"]);
+                $ConfirmPassword = test_input($_POST["ConfirmPassword"]);
                 //Controllo della password se è scritta correttamente
-                if (!preg_match("^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$^", $password)) {
-                    $password = "Formato non valido, la password deve contenere almeno: <br>- Almeno 1 numero <br>- minimo 8 caretteri <br>- almeno 1 lettara maiuscola <br>- almeno 1 lettera minuscola";
+                $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
+                if (!preg_match($password_regex, $password)) {
+                    $passwordErr = "Formato non valido, la password deve contenere almeno: <br>- Almeno 1 numero <br>- minimo 8 caretteri <br>- almeno 1 lettara maiuscola <br>- almeno 1 lettera minuscola <br>- almeno un carattere speciale <br>";
+                    $password = "";
+                    $ConfirmPassword = "";
                 }
-            }
-
-            if (empty($_POST["comment"])) {
-                $comment = "";
-            } else {
-                $comment = test_input($_POST["comment"]);
-            }
-
-            if (empty($_POST["gender"])) {
-                $genderErr = "Gender is required";
-            } else {
-                $gender = test_input($_POST["gender"]);
+                if ($password != $ConfirmPassword) {
+                    $passwordErr .= "<br>Le password non coincidono<br>";
+                    $ConfirmPassword = "";
+                }
             }
         }
 
@@ -103,25 +105,20 @@
                 <div class="level-item has-text-centered">
                     <div>
                         <p><?php
-                                echo $nomeErr;
+                            echo $nomeErr;
                             ?>
                             <br>
                             <?php
-                                echo $cognomeErr;
+                            echo $cognomeErr;
                             ?>
                             <br>
                             <?php
-                                echo $emailErr;
+                            echo $emailErr;
                             ?>
                             <br>
                             <?php
-                                echo $passwordErr;
+                            echo $passwordErr;
                             ?>
-                            <br>
-                            <?php
-                                echo $nomeErr;
-                            ?>
-                            <br>
                         </p>
                     </div>
                 </div>
@@ -140,41 +137,42 @@
             <br>
             <br>
             <div class="level-item">
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" name="formRegistrazione" id="formRegistrazione">
+                <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" name="formRegistrazione" id="formRegistrazione">
                     <div class="field">
                         <div class="control">
-                            <input class="input is-medium" type="text" placeholder="Nome" name="nome" id="fnome" pattern="[A-Za-z]{4,15}">
+                            <input class="input is-medium" type="text" placeholder="Nome" name="nome" id="fnome" value="<?= $nome ?>">
                         </div>
                     </div>
                     <br>
                     <div class="field">
                         <div class="control">
-                            <input class="input is-medium" type="text" placeholder="Cognome" name="cognome" id="fcognome" pattern="[A-Za-z]{4,15}">
+                            <input class="input is-medium" type="text" placeholder="Cognome" name="cognome" id="fcognome" value="<?= $cognome ?>">
                         </div>
                     </div>
                     <br>
                     <div class="field">
                         <div class="control">
-                            <!--<input class="input is-medium" type="email" placeholder="Email" name="email" id="femail" pattern="[a-z]*\.[a-z][a-z0-9]*@buonarroti.tn.it">-->
-                            <input class="input is-medium" type="text" placeholder="Email" id="email" name="email" required=""> <!-- pattern="[a-z]*\.[a-z][a-z0-9]*"-->
+                            <input class="input is-medium" type="text" placeholder="Email" id="email" name="email" value="<?= $email ?>">
                         </div>
                     </div>
                     <br>
                     <div class="field">
                         <div class="control">
-                            <input class="input is-medium" type="password" placeholder="Password" name="password" id="password">    <!-- pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"-->
+                            <input class="input is-medium" type="password" placeholder="Password" name="password" id="password" value="<?= $password ?>">
                         </div>
                     </div>
                     <br>
                     <div class="field">
                         <div class="control">
-                            <input class="input is-medium" type="password" placeholder="Conferma password" name="ConfirmPassword" id="Cpassword">
+                            <input class="input is-medium" type="password" placeholder="Conferma password" name="ConfirmPassword" id="Cpassword" value="<?= $ConfirmPassword ?>">
                         </div>
                     </div>
                     <br>
                     <div class="level-item">
                         <input class="button is-info" type="submit" value="Invia" name="btnA">
                     </div>
+                    <br>
+                    <br>
                 </form>
         </section>
     </body>
