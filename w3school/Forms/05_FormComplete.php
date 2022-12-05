@@ -107,7 +107,5 @@
         <?php
         echo $gender;
         ?>
-
-
     </body>
 </html>
