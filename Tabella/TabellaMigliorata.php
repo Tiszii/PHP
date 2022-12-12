@@ -8,7 +8,7 @@
         </style>
         <h1>Tabella</h1>
         <?php
-        // oer migliorare l'efficienza è bene far interpretare il codice dal browser piuttosto che php
+        // per migliorare l'efficienza è bene far interpretare il codice dal browser piuttosto che php
         $x = 1;
         $Materie = array(
             array("Lezione(7.50-8.40)", "Inglese", "Italiano", "Inglese", "Inglese", "Italiano", "Tpsit"),
@@ -34,6 +34,8 @@
                             }
                         ?>
                     </tr>
+                            }
+                        ?>
                 </thead>
                 <tbody>
                     <?php
