@@ -81,7 +81,7 @@
             Gender:
             <input type="radio" name="gender" <?php if (isset($gender) && $gender == "female") echo "checked"; ?> value="female">Female
             <input type="radio" name="gender" <?php if (isset($gender) && $gender == "male") echo "checked"; ?> value="male">Male
-            <input type="radio" name="gender" <?= (isset($gender) && $gender == other ? "checked" : "") ?> value="other">Other  
+            <input type="radio" name="gender" <?= (isset($gender) && $gender == "other") ? "checked" : "" ?> value="other">Other  
             <span class="error">* <?php echo $genderErr; ?></span>
             <br><br>
             <input type="submit" name="submit" value="Submit">  

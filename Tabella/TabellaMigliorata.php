@@ -27,38 +27,51 @@
                 <thead>
                     <tr>
                         <?php
-                            foreach ($Giorni as $y) {
-                        ?>                
+                        foreach ($Giorni as $y) {
+                            ?>                
                             <th><?= $y ?></th>
-                        <?php
-                            }
+                            <?php
+                        }
                         ?>
                     </tr>
-                            }
-                        ?>
                 </thead>
                 <tbody>
                     <?php
-                        for ($i = 0; $i < count($Materie); $i++) {
-                    ?>
+                    for ($i = 0; $i < count($Materie); $i++) {
+                        ?>
                         <tr>
-                    <?php
-                        for ($z = 0; $z < count($Materie[$i]); $z++) {
-                    ?>
-                        <th> <?= $Materie[$i][$z] ?></th>
-                    <?php
-                        }
-                    ?>
+                            <?php
+                            for ($z = 0; $z < count($Materie[$i]); $z++) {
+                                ?>
+                                <th> <?= $Materie[$i][$z] ?></th>
+                                <?php
+                            }
+                            ?>
                         </tr>
-                    <?php
-                        }
+                        <?php
+                    }
                     ?>
                 </tbody>
             </table>
             <?php
-               }
-                rappresentaTabella($Giorni, $Materie);
-            ?>
+        }
+
+        rappresentaTabella($Giorni, $Materie);
+        ?>
+
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th></th>
+                </tr>                
+            </tbody>
+        </table>
+        
     </body>
 </html>
 
