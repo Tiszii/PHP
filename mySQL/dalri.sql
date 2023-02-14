@@ -270,3 +270,19 @@ BETWEEN	Between a certain range
 LIKE	Search for a pattern	
 IN	To specify multiple possible values for a column
 */
+        
+
+
+
+
+
+INSERT INTO tcontatti (nome,cognome)
+VALUES ('Mario','Rossi');
+
+INSERT INTO ttelefoni (numero,fk_contatti)
+VALUES ('3246623488','1');
+
+
+SELECT *
+FROM tcontatti,ttelefoni
+WHERE tcontatti.id_contatti=ttelefoni.id_telefoni;
