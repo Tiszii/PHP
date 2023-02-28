@@ -172,11 +172,20 @@ ORDER BY nome ASC, cognome DESC;
 
 
 --insert into
-INSERT INTO tcontatti (nome,cognome)
-VALUES ('Mario','Rossi');
+INSERT INTO tcontatti (nome, cognome, codice_fiscale, data_nascita, ora_nascita)
+VALUES ('Mario', 'Rossi', 'RSSMRA80A01A001B', '1980-01-01', '12:00:00');
 
-INSERT INTO ttelefoni (numero,fk_contatti)
-VALUES ('3246623488','1');
+INSERT INTO ttelefoni (numero, operatore, tipo, fk_contatti)
+VALUES ('3331234567', 'Vodafone', 'P', 4);
+
+INSERT INTO toperatori (nome)
+VALUES ('Tim');
+
+INSERT INTO tgruppi (nome)
+VALUES ('Amici');
+
+INSERT INTO tappartiene (fk_contatti, fk_gruppi)
+VALUES (1, 1);
 
 
 --Null values
@@ -257,3 +266,62 @@ ON ttelefoni.operatore = toperatori.nome;
 SELECT *
 FROM tcontatti, ttelefoni toperatori
 WHERE tcontatti.id_contatti = ttelefoni.fk_contatti AND ttelefoni.operatore = toperatori.nome;
+
+
+
+
+
+ALTER TABLE tcontatti
+ADD COLUMN Citta varchar(50);
+
+UPDATE tcontatti 
+SET Citta = 'Trento' 
+WHERE tcontatti.id_contatti = 4;
+
+
+--1
+SELECT Citta, Count(*) AS NumeroContatti
+FROM tcontatti
+GROUP BY Citta;
+
+
+--2
+SELECT Citta, GROUP_CONCAT(Nome,' ',Cognome, SEPARATOR ',') AS NumeroContatti
+FROM tcontatti
+GROUP BY Citta;
+
+
+--3
+SELECT *
+FROM tcontatti
+WHERE tcontatti.data_nascita=(
+    SELECT MAX(tcontatti.data_nascita)
+    FROM tcontatti
+);
+
+
+--4
+SELECT *
+FROM tcontatti,ttelefoni
+WHERE ttelefoni.fk_contatti=tcontatti.id_contatti AND ttelefoni.operatore='VODAFONE';
+
+
+--5
+SELECT ttelefoni.operatore AS Operatore, COUNT(*) AS NumeroContatti
+FROM tcontatti,ttelefoni
+WHERE ttelefoni.fk_contatti=tcontatti.id_contatti
+GROUP BY ttelefoni.operatore;
+
+
+--6
+SELECT operatore AS Operatore, COUNT(*) AS NumeroContatti
+FROM ttelefoni
+GROUP BY operatore
+HAVING COUNT(*)=(
+	SELECT COUNT(*)
+	FROM ttelefoni
+	GROUP BY operatore
+	ORDER BY COUNT(*) ASC
+	LIMIT 1
+)
+ORDER BY operatore ASC;
