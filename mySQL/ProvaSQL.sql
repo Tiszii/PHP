@@ -238,5 +238,22 @@ SELECT * FROM tcontatti
 WHERE nome LIKE '%Mar%';
 
 
+SELECT *
+FROM tcontatti
+INNER JOIN ttelefoni
+ON tcontatti.id_contatti = ttelefoni.fk_contatti;
 
+SELECT *
+FROM tcontatti, ttelefoni
+WHERE tcontatti.id_contatti = ttelefoni.fk_contatti;
 
+SELECT *
+FROM tcontatti
+INNER JOIN ttelefoni
+ON tcontatti.id_contatti = ttelefoni.fk_contatti
+INNER JOIN toperatori
+ON ttelefoni.operatore = toperatori.nome;
+
+SELECT *
+FROM tcontatti, ttelefoni toperatori
+WHERE tcontatti.id_contatti = ttelefoni.fk_contatti AND ttelefoni.operatore = toperatori.nome;
