@@ -279,6 +279,8 @@ SET Citta = 'Trento'
 WHERE tcontatti.id_contatti = 4;
 
 
+
+
 --1
 SELECT Citta, Count(*) AS NumeroContatti
 FROM tcontatti
