@@ -327,3 +327,157 @@ HAVING COUNT(*)=(
 	LIMIT 1
 )
 ORDER BY operatore ASC;
+
+
+
+
+
+--IN: Selezionare i contatti che appartengono a uno o più gruppi specifici:
+
+SELECT *
+FROM tcontatti
+WHERE id_contatti IN (
+SELECT fk_contatti
+FROM tappartiene
+WHERE fk_gruppi IN (1, 2, 3)
+);
+
+
+
+
+--Wildcard: Selezionare i contatti il cui cognome inizia con la lettera 'A':
+
+SELECT *
+FROM tcontatti
+WHERE cognome LIKE 'A%';
+
+--Selezionare i contatti il cui nome contiene la lettera 'o':
+SELECT *
+FROM tcontatti
+WHERE nome LIKE '%o%';
+
+
+
+
+--Between: Selezionare i contatti nati tra il 1° gennaio 1990 e il 31 dicembre 1995:
+
+SELECT *
+FROM tcontatti
+WHERE data_nascita BETWEEN '1990-01-01' AND '1995-12-31';
+
+--Selezionare i contatti che hanno un numero di telefono con un valore tra 1000 e 9999:
+SELECT *
+FROM ttelefoni
+WHERE numero BETWEEN '1000' AND '9999';
+
+
+
+--Aliases: Selezionare il nome del contatto, il numero di telefono e il nome dell'operatore per i numeri di telefono di tipo 'C':
+SELECT c.nome, t.numero, o.nome AS operatore
+FROM tcontatti c
+JOIN ttelefoni t ON c.id_contatti = t.fk_contatti
+JOIN toperatori o ON t.operatore = o.id_operatori
+WHERE t.tipo = 'C';
+
+
+
+
+--join:Selezionare il nome del contatto e il nome del gruppo a cui appartiene:
+SELECT c.nome, g.nome
+FROM tcontatti c
+JOIN tappartiene ap ON c.id_contatti = ap.fk_contatti
+JOIN tgruppi g ON ap.fk_gruppi = g.id_gruppi;
+
+
+
+--Inner join:Selezionare il nome del contatto e il nome del gruppo a cui appartiene solo se il contatto appartiene a almeno un gruppo:
+SELECT c.nome, g.nome
+FROM tcontatti c
+JOIN tappartiene ap ON c.id_contatti = ap.fk_contatti
+JOIN tgruppi g ON ap.fk_gruppi = g.id_gruppi;
+
+
+
+--CrossJoin :Restituisce il nome del contatto e il nome del gruppo a cui appartiene, per tutte le possibili combinazioni
+SELECT c.nome, g.nome
+FROM tcontatti c
+CROSS JOIN tgruppi g;
+
+
+
+--Self join : Restituisce il nome del contatto e il nome dei contatti associati ai gruppi a cui appartiene
+SELECT c1.nome, c2.nome
+FROM tcontatti c1
+JOIN tappartiene a ON c1.id_contatti = a.fk_contatti
+JOIN tcontatti c2 ON c2.id_contatti = a.fk_contatti;
+
+
+
+--Right join Restituisce il nome del contatto e il numero di telefono associato, incluso il nome dell'operatore, 
+--per tutti i numeri di telefono, incluso quelli non associati ad alcun contatto
+SELECT c.nome, t.numero, o.nome AS operatore
+FROM ttelefoni t
+RIGHT JOIN tcontatti c ON t.fk_contatti = c.id_contatti
+LEFT JOIN toperatori o ON t.operatore = o.id_operatori;
+
+
+
+--left join Restituisce il nome dei gruppi e il nome del contatto, se presente, che appartiene al gruppo, per tutti i gruppi
+SELECT g.nome AS gruppo, c.nome AS contatto
+FROM tgruppi g
+LEFT JOIN tappartiene a ON g.id_gruppi = a.fk_gruppi
+LEFT JOIN tcontatti c ON a.fk_contatti = c.id_contatti;
+
+
+--group by Restituisce il nome dell'operatore e il numero di telefoni associati, per ogni operatore, in ordine decrescente di numero di telefoni
+SELECT o.nome AS operatore, COUNT(t.id_telefoni) AS num_telefoni
+FROM ttelefoni t
+LEFT JOIN toperatori o ON t.operatore = o.id_operatori
+GROUP BY o.id_operatori
+ORDER BY num_telefoni DESC;
+
+
+--having Restituisce il nome dei gruppi con almeno tre contatti appartenenti
+SELECT g.nome AS gruppo, COUNT(c.id_contatti) AS num_contatti
+FROM tgruppi g
+LEFT JOIN tappartiene a ON g.id_gruppi = a.fk_gruppi
+LEFT JOIN tcontatti c ON a.fk_contatti = c.id_contatti
+GROUP BY g.id_gruppi
+HAVING num_contatti >= 3;
+
+
+--exist Restituisce il nome dei contatti che hanno almeno un numero di telefono associato
+SELECT nome, cognome
+FROM tcontatti
+WHERE EXISTS (SELECT * FROM ttelefoni WHERE ttelefoni.fk_contatti = tcontatti.id_contatti);
+
+
+--Any/all Restituisce il nome dei contatti che hanno almeno un numero di telefono associato con l'operatore "Vodafone"
+SELECT nome, cognome
+FROM tcontatti
+WHERE id_contatti = ANY (SELECT fk_contatti FROM ttelefoni WHERE operatore = 'Vodafone');
+
+
+--Case Restituisce il nome e il cognome dei contatti e, se hanno un numero di telefono personale, 
+-- restituisce "SI" nella colonna "ha_telefono_personale", altrimenti restituisci "NO"
+SELECT 
+    nome, 
+    cognome, 
+    CASE 
+        WHEN EXISTS (SELECT * FROM ttelefoni WHERE fk_contatti = tcontatti.id_contatti AND tipo = 'P') 
+            THEN 'SI'
+        ELSE 'NO'
+    END AS ha_telefono_personale
+FROM tcontatti;
+
+
+--Insert Select
+INSERT INTO tcontatti_telefonopersonale (nome, cognome, codice_fiscale, data_nascita, ora_nascita, attivo)
+SELECT 
+    nome, 
+    cognome, 
+    codice_fiscale, 
+    data_nascita, 
+    ora_nascita, 
+    attivo 
+FROM tcontatti 
